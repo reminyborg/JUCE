@@ -130,6 +130,15 @@ public:
                                                        styleMask: getNSWindowStyleMask (windowStyleFlags)
                                                          backing: NSBackingStoreBuffered
                                                            defer: YES];
+            [window setTitlebarAppearsTransparent:YES];
+            [window setTitleVisibility:NSWindowTitleHidden];
+            [window setOpaque:NO];
+            
+            [window setCollectionBehavior:NSWindowCollectionBehaviorFullScreenAuxiliary|NSWindowCollectionBehaviorFullScreenNone|NSWindowCollectionBehaviorFullScreenDisallowsTiling];
+                  
+           NSButton *button = [window standardWindowButton:NSWindowZoomButton];
+           [button setEnabled: NO];
+            
             setOwner (window, this);
             [window orderOut: nil];
             [window setDelegate: (id<NSWindowDelegate>) window];
@@ -1334,9 +1343,10 @@ public:
 
     static unsigned int getNSWindowStyleMask (const int flags) noexcept
     {
-        unsigned int style = (flags & windowHasTitleBar) != 0 ? NSWindowStyleMaskTitled
-                                                              : NSWindowStyleMaskBorderless;
-
+        unsigned int style = (flags & windowHasTitleBar) != 0 ? NSWindowStyleMaskTitled : NSWindowStyleMaskBorderless;
+        
+        style |= NSWindowStyleMaskFullSizeContentView;
+        
         if ((flags & windowHasMinimiseButton) != 0)  style |= NSWindowStyleMaskMiniaturizable;
         if ((flags & windowHasCloseButton) != 0)     style |= NSWindowStyleMaskClosable;
         if ((flags & windowIsResizable) != 0)        style |= NSWindowStyleMaskResizable;
